@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/home/etec/Documentos/AGBD_chinook/chinook/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3873"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainalbums"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="albums" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="60"/><column index="2" value="300"/><column index="3" value="54"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">SELECT FirstName, LastName FROM employees
+ORDER by FirstName ASC;
+
+SELECT tracks.Name, tracks.Milliseconds FROM tracks
+JOIN albums ON tracks.AlbumId = albums.AlbumId
+WHERE albums.Title = 'Big Ones'
+ORDER by tracks.Milliseconds DESC;
+
+SELECT a.Title, SUM(t.UnitPrice) AS TotalPrice FROM albums a
+JOIN tracks t ON a.AlbumId = t.AlbumId
+GROUP BY a.AlbumId
+ORDER BY TotalPrice ASC LIMIT 10;
+
+SELECT t.Name AS SongName, g.Name AS GenreName, a.Title AS AlbumTitle FROM tracks t 
+JOIN genres g ON t.GenreId = g.GenreId 
+JOIN albums a ON t.AlbumId = a.AlbumId 
+WHERE t.UnitPrice = 0.99;
+
+SELECT t.Name AS SongName, t.Milliseconds, alb.Title AS AlbumTitle, art.Name AS ArtistName FROM tracks t
+JOIN albums alb ON t.AlbumId = alb.AlbumId
+JOIN artists art ON alb.ArtistId = art.ArtistId
+ORDER BY t.Milliseconds ASC LIMIT 20;
+
+SELECT e.LastName, e.Title, m.LastName AS ManagerLastName, Count(c.CustomerId) AS TotalClients FROM employees e
+LEFT JOIN employees m ON e.ReportsTo = m.EmployeeId
+LEFT JOIN customers c ON e.EmployeeId = c.SupportRepId
+GROUP BY e.EmployeeId
+ORDER BY TotalClients DESC;
+
+SELECT e.FirstName AS EmpFirstName, e.LastName AS EmpLastName, c.FirstName AS CustFirstName, c.LastName AS CustLastName FROM employees e
+JOIN customers c ON e.EmployeeId = c.SupportRepId;
+
+SELECT c.FirstName, c.LastName, c.Address, i.InvoiceId, i.Total, i.InvoiceDate FROM Customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId;
+
+SELECT g.Name, Count(t.TrackId) AS TotalCanciones FROM genres g
+JOIN tracks t ON g.GenreId = t.GenreId
+GROUP By g.Name
+ORDER By TotalCanciones DESC;
+
+SELECT DISTINCT c.FirstName, c.LastName, ar.Name AS	 ArtistName FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+JOIN tracks t ON ii.TrackId = t.TrackId
+JOIN albums al ON t.AlbumId = al.AlbumId
+JOIN artists ar ON al.ArtistId = ar.ArtistId
+ORDER By c.FirstName ASC, c.LastName ASC;
+
+SELECT c.FirstName, c.City, t.Name AS SongName, g.Name AS GenreName FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+JOIN tracks t ON ii.TrackId = t.TrackId
+JOIN genres g ON t.GenreId = g.GenreId;
+
+SELECT * FROM artists ar
+JOIN albums al ON ar.ArtistId = al.ArtistId
+JOIN tracks t ON al.AlbumId = t.AlbumId
+JOIN genres g ON t.GenreId = g.GenreId
+JOIN media_types m ON t.MediaTypeId = m.MediaTypeId
+JOIN invoice_items ii ON t.TrackId = ii.TrackId
+JOIN invoices i ON ii.InvoiceId = i.InvoiceId
+JOIN customers c ON i.CustomerId = c.CustomerId
+JOIN employees e ON c.SupportRepId = e.EmployeeId; </sql><current_tab id="0"/></tab_sql></sqlb_project>
